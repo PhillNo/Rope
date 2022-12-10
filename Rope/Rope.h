@@ -13,36 +13,11 @@ class Rope
 public:
     Rope(){}
     
-    Rope(const ManagedArr<T>& sourceArr)
+    Rope(const ManagedArr<T>& source_arr)
     {
-        leaf   = new ManagedArr<T>(sourceArr);
-        weight = sourceArr.len();
+        leaf   = new ManagedArr<T>(source_arr);
+        weight = source_arr.len();
         length = weight;
-    }
-
-    Rope(const ManagedArr<T>* sourceArr)
-    {
-        leaf   = new ManagedArr<T>(sourceArr);
-        weight = sourceArr->len();
-        length = weight;
-    }
-
-    Rope(const Rope<T>& src)
-    {
-        if (src.leaf) leaf = new ManagedArr<T>(*src.leaf);        
-        if (src.L) L       = new Rope(*src.L);
-        if (src.R) R       = new Rope(*src.R);
-        weight = src.weight;
-        length = src.length;
-    }
-
-    Rope(const Rope<T>* src)
-    {
-        if (src->leaf) leaf = new ManagedArr<T>(*src.leaf);        
-        if (src->L) L       = new Rope(*src.L);
-        if (src->R) R       = new Rope(*src.R);
-        weight = src->weight;
-        length = src->length;
     }
     
     ~Rope()
@@ -61,7 +36,7 @@ public:
         }
     }
 
-    unsigned int insert(unsigned int index, const ManagedArr<T> newData)
+    unsigned int insert(unsigned int index, const ManagedArr<T> new_data)
     {
         if (index > length)
         {
@@ -73,18 +48,18 @@ public:
             {
                 if (R)
                 {
-                    R->insert(index - weight, newData);
+                    R->insert(index - weight, new_data);
                 }
                 else
                 {
-                    R = new Rope<T>(newData);
+                    R = new Rope<T>(new_data);
                 }
             }
             else
             {
                 if (L)
                 {
-                    L->insert(index, newData);
+                    L->insert(index, new_data);
                 }
                 else
                 {
@@ -94,7 +69,7 @@ public:
                     leaf = nullptr;
 
                     L = new Rope<T>(fc);
-                    L->R = new Rope<T>(newData);
+                    L->R = new Rope<T>(new_data);
                     L->R->R = new Rope<T>(sc);
                 }
             }

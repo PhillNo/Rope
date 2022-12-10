@@ -7,15 +7,15 @@
 namespace phillno
 {
 
-enum class SourceAllocation {STATIC, DYNAMIC, ENUM_SIZE};
+enum class AllocationType {STATIC, DYNAMIC, ENUM_SIZE};
 
 template <class T>
 class ManagedArr
 {
 public:
-    ManagedArr(){}
+    ManagedArr():length(0), offset(0){}
 
-    ManagedArr(T *data, unsigned int length, SourceAllocation allocation)
+    ManagedArr(T *data, unsigned int len, AllocationType allocation): length(len), offset(0)
     {
         /*
         Source allocation of STATIC will not give the pointer to source char array to a shared pointer
@@ -29,22 +29,26 @@ public:
 
         if (data)
         {
-            this->length = length;
+            //this->length = length;
 
-            if (allocation == SourceAllocation::DYNAMIC)
+            if (allocation == AllocationType::DYNAMIC)
             {
                 shared_buff = std::shared_ptr<T>(data);
-                get_ptr = &phillno::ManagedArr<T>::get_shared_buff;
+                ptr_get = &phillno::ManagedArr<T>::get_shared_buff;
             }
-            else if (allocation == SourceAllocation::STATIC)
+            else if (allocation == AllocationType::STATIC)
             {
-                raw_buff = data;
-                get_ptr = &phillno::ManagedArr<T>::get_raw_buff;
+                static_buff = data;
+                ptr_get = &phillno::ManagedArr<T>::get_static_buff;
             }
+        }
+        else
+        {
+            throw std::invalid_argument("nullptr not accepted in ManagedArr constructor.");
         }
     }
 
-    ManagedArr(const ManagedArr& source, unsigned int offset, unsigned int length)
+    ManagedArr(const ManagedArr& source, unsigned int start, unsigned int len): offset(start), length(len)
     {   
         /*
         Constructed ManagedArr will use the same head.
@@ -60,23 +64,14 @@ public:
         }
         else
         {
-            this->get_ptr     = source.get_ptr;
-            this->raw_buff    = source.raw_buff;
+            this->ptr_get     = source.ptr_get;
+            this->static_buff = source.static_buff;
             this->shared_buff = source.shared_buff;
-            this->offset      = source.offset + offset;
-            this->length      = length;
+            //this->offset      = source.offset + offset;
+            //this->length      = length;
         }
     }
 
-    ManagedArr(const ManagedArr& source)
-    {
-        this->get_ptr     = source.get_ptr;
-        this->raw_buff    = source.raw_buff;
-        this->shared_buff = source.shared_buff;
-	    this->offset = source.offset;
-	    this->length = source.length;
-    }
-    
     ~ManagedArr(){}
 
     unsigned int len() const
@@ -86,14 +81,14 @@ public:
 
     T get(unsigned int index) const
     {
-        return (this->*get_ptr)(index);
+        return (this->*ptr_get)(index);
     }
 
-    T get_raw_buff(unsigned int index) const
+    T get_static_buff(unsigned int index) const
     {
         if (index < length)
         {
-            return raw_buff[offset + index];
+            return static_buff[offset + index];
         }
         else
         {
@@ -118,14 +113,13 @@ public:
 	    return get(index);  
     }
 
-    T (ManagedArr::*get_ptr) (unsigned int) const = nullptr;
+    T (ManagedArr::*ptr_get) (unsigned int) const = nullptr;
 
 protected:
-    unsigned int length = 0;
-    unsigned int offset = 0;
-    T *raw_buff = nullptr;
+    const unsigned int length;
+    const unsigned int offset;
+    T *static_buff = nullptr;
     std::shared_ptr<T> shared_buff;
-
 
 };
 

@@ -8,10 +8,10 @@ int main()
     const char* newChunk  = new char[10]{'B','r','a','v','e',' ','N','e','w',' '};
     const char* starChunk = new char[2]{'*', 0};
 
-    const phillno::ManagedArr<const char> buff1 = phillno::ManagedArr<const char>(original, 12, phillno::SourceAllocation::DYNAMIC); 
+    const phillno::ManagedArr<const char> buff1 = phillno::ManagedArr<const char>(original, 12, phillno::AllocationType::DYNAMIC); 
     const phillno::ManagedArr<const char> buff2 = phillno::ManagedArr<const char>(buff1, 6, 6);
-    const phillno::ManagedArr<const char> buff3 = phillno::ManagedArr<const char>(newChunk, 10, phillno::SourceAllocation::DYNAMIC); 
-    const phillno::ManagedArr<const char> buff4 = phillno::ManagedArr<const char>(starChunk, 1, phillno::SourceAllocation::DYNAMIC);
+    const phillno::ManagedArr<const char> buff3 = phillno::ManagedArr<const char>(newChunk, 10, phillno::AllocationType::DYNAMIC); 
+    const phillno::ManagedArr<const char> buff4 = phillno::ManagedArr<const char>(starChunk, 1, phillno::AllocationType::DYNAMIC);
     
     for (int i = 0; i < 23; i++)
     {
