@@ -58,7 +58,7 @@ public:
         New offsets are relative to source offset, not source shared_buff.
         */
     
-        if (offset > source.length)
+        if (new_offset > source.length)
         {
             throw std::out_of_range("offset & length args OOR of source ManagedArr");
         }
