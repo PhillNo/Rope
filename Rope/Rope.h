@@ -84,7 +84,7 @@ public:
     {
         if (index >= length)
         {
-            throw std::out_of_range("Rope peek index OOR");
+            throw std::out_of_range("Rope.get index OOR");
         }
         else
         {
@@ -105,7 +105,7 @@ public:
                 }
             }
         }
-        throw std::logic_error("error in Rope.peek() implementation.");
+        throw std::logic_error("error in Rope.get() implementation.");
     }
 
     unsigned int wgt() const
