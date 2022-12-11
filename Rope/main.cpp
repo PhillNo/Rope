@@ -4,9 +4,9 @@
 
 int main()
 {
-    const char* original  = new char[12]{'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'};
-    const char* newChunk  = new char[10]{'B','r','a','v','e',' ','N','e','w',' '};
-    const char* starChunk = new char[2]{'*', 0};
+    char *const original  = new char[12]{'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'};
+    char *const newChunk  = new char[10]{'B','r','a','v','e',' ','N','e','w',' '};
+    char *const starChunk = new char[2]{'*', 0};
 
     const phillno::ManagedArr<const char> buff1 = phillno::ManagedArr<const char>(original, 0, 12, phillno::AllocationType::DYNAMIC); 
     const phillno::ManagedArr<const char> buff2 = phillno::ManagedArr<const char>(buff1, 6, 6);
