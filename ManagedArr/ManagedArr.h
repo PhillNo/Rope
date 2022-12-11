@@ -15,7 +15,7 @@ class ManagedArr
 public:
     ManagedArr():length(0), offset(0){}
 
-    ManagedArr(T *data, unsigned int len, AllocationType allocation): length(len), offset(0)
+    ManagedArr(T *data, unsigned int new_len, unsigned int new_offset, AllocationType allocation): length(new_len), offset(new_offset)
     {
         /*
         Source allocation of STATIC will not give the pointer to source char array to a shared pointer
@@ -48,7 +48,7 @@ public:
         }
     }
 
-    ManagedArr(const ManagedArr& source, unsigned int start, unsigned int len): offset(start), length(len)
+    ManagedArr(const ManagedArr& source, unsigned int new_offset, unsigned int new_len): offset(source.offset + new_offset), length(new_len)
     {   
         /*
         Constructed ManagedArr will use the same head.
