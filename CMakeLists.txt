@@ -10,8 +10,8 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 
 enable_testing()
 
-include_directories(${MyProject_SOURCE_DIR}/ManagedArr)
-include_directories(${MyProject_SOURCE_DIR}/Rope)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/ManagedArr)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Rope)
 
 
 add_library(ManagedArr ManagedArr/ManagedArr.cpp)

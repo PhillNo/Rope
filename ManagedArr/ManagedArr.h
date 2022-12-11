@@ -15,7 +15,7 @@ class ManagedArr
 public:
     ManagedArr():length(0), offset(0){}
 
-    ManagedArr(T *data, unsigned int new_len, unsigned int new_offset, AllocationType allocation): length(new_len), offset(new_offset)
+    ManagedArr(T *data, unsigned int new_offset, unsigned int new_len, AllocationType allocation): length(new_len), offset(new_offset)
     {
         /*
         Source allocation of STATIC will not give the pointer to source char array to a shared pointer
@@ -25,12 +25,8 @@ public:
         Side effect: When all of the shared pointers go out of scope, they will delete[] the source.
         */
 
-        //TODO: SourceAllocation::STATIC implementation
-
         if (data)
         {
-            //this->length = length;
-
             if (allocation == AllocationType::DYNAMIC)
             {
                 shared_buff = std::shared_ptr<T>(data);
@@ -48,7 +44,7 @@ public:
         }
     }
 
-    ManagedArr(const ManagedArr& source, unsigned int new_offset, unsigned int new_len): offset(source.offset + new_offset), length(new_len)
+    ManagedArr(const ManagedArr& source, unsigned int offset_increase, unsigned int new_len): offset(source.offset + offset_increase), length(new_len)
     {   
         /*
         Constructed ManagedArr will use the same head.
@@ -58,7 +54,7 @@ public:
         New offsets are relative to source offset, not source shared_buff.
         */
     
-        if (new_offset > source.length)
+        if ((offset_increase + new_len) > (source.offset + source.length))
         {
             throw std::out_of_range("offset & length args OOR of source ManagedArr");
         }
@@ -67,8 +63,6 @@ public:
             this->ptr_get     = source.ptr_get;
             this->static_buff = source.static_buff;
             this->shared_buff = source.shared_buff;
-            //this->offset      = source.offset + offset;
-            //this->length      = length;
         }
     }
 
