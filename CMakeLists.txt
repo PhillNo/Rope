@@ -18,7 +18,7 @@ add_library(ManagedArr ManagedArr/ManagedArr.cpp)
 add_library(Rope Rope/Rope.cpp)
 add_executable(unit_test Rope/main.cpp)
 
-target_include_directories(Rope PUBLIC      ${CMAKE_CURRENT_SOURCE_DIR}/ManagedArr)
+target_include_directories(Rope      PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ManagedArr)
 target_include_directories(unit_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ManagedArr)
 target_include_directories(unit_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Rope)
 

@@ -63,14 +63,14 @@ public:
                 }
                 else
                 {
-                    ManagedArr<T> fc = ManagedArr<T>(*leaf, 0, index);
-                    ManagedArr<T> sc = ManagedArr<T>(*leaf, index, leaf->len() - index);//index, leaf->get_length() - index);
+                    ManagedArr<T> *fc = new ManagedArr<T>(*leaf, 0, index);
+                    ManagedArr<T> *sc = new ManagedArr<T>(*leaf, index, leaf->len() - index);//index, leaf->get_length() - index);
                     delete leaf;
                     leaf = nullptr;
 
-                    L = new Rope<T>(fc);
+                    L = new Rope<T>(*fc);
                     L->R = new Rope<T>(new_data);
-                    L->R->R = new Rope<T>(sc);
+                    L->R->R = new Rope<T>(*sc);
                 }
             }
         }
@@ -78,7 +78,31 @@ public:
         return length;
     }
 
-    unsigned int remove(unsigned int start, unsigned int end);
+    unsigned int remove(unsigned int start, unsigned int len);
+    /*
+    {
+        if (start >= weight)
+        {
+            if ((len > 0) && ((start + len) < length))
+            {
+                R->remove(start - weight, len);
+            }
+            else
+            {
+                throw std::out_of_range("star index or start index + len is greater then Rope length.")
+            }
+        }
+        else
+        {
+            if ((start + len) < weight)
+            {
+
+            }
+        }
+
+        return calc_length();
+    }
+    */
     
     T get(unsigned int index) const
     {
