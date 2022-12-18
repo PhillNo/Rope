@@ -68,17 +68,17 @@ public:
 
     ~ManagedArr(){}
 
-    unsigned int len() const
+    inline unsigned int len() const
     {
         return length;
     }
 
-    T get(unsigned int index) const
+    inline T get(unsigned int index) const
     {
         return (this->*ptr_get)(index);
     }
 
-    T get_static_buff(unsigned int index) const
+    inline T get_static_buff(unsigned int index) const
     {
         if (index < length)
         {
@@ -90,7 +90,7 @@ public:
         }
     }
 
-    T get_shared_buff(unsigned int index) const
+    inline T get_shared_buff(unsigned int index) const
     {
         if (index < length)
         {

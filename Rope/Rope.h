@@ -36,7 +36,7 @@ public:
         }
     }
 
-    unsigned int insert(unsigned int index, const ManagedArr<T> new_data)
+    unsigned int insert(unsigned int index, const ManagedArr<T>& new_data)
     {
         if (index > length)
         {
@@ -63,14 +63,17 @@ public:
                 }
                 else
                 {
-                    ManagedArr<T> *fc = new ManagedArr<T>(*leaf, 0, index);
-                    ManagedArr<T> *sc = new ManagedArr<T>(*leaf, index, leaf->len() - index);//index, leaf->get_length() - index);
+                    Rope<T> *left_chunk = new Rope<T>(*(new ManagedArr<T>(*leaf, 0, index)));
+                    Rope<T> *right_chunk = new Rope<T>(*(new ManagedArr<T>(*leaf, index, leaf->len() - index)));
+                    Rope<T> *middle_chunk = new Rope<T>(*(new ManagedArr<T>(new_data)));
                     delete leaf;
                     leaf = nullptr;
 
-                    L = new Rope<T>(*fc);
-                    L->R = new Rope<T>(new_data);
-                    L->R->R = new Rope<T>(*sc);
+                    L = new Rope<T>();
+                    L->L = left_chunk;
+                    R = new Rope<T>();
+                    R->L = middle_chunk;
+                    R->R = right_chunk;
                 }
             }
         }
@@ -78,32 +81,86 @@ public:
         return length;
     }
 
-    unsigned int remove(unsigned int start, unsigned int len);
-    /*
+    unsigned int remove(unsigned int start, unsigned int len)
     {
-        if (start >= weight)
+        if (leaf)
         {
-            if ((len > 0) && ((start + len) < length))
+            if ((start > 0) && ((start + len) >= leaf->len()))
             {
-                R->remove(start - weight, len);
+                ManagedArr<T> *new_leaf = new ManagedArr<T>(*leaf, 0, start);
+                delete leaf;
+                leaf = new_leaf;
             }
-            else
+            else if ((start == 0) && ( (start + len) <= leaf->len()) )
             {
-                throw std::out_of_range("star index or start index + len is greater then Rope length.")
+                ManagedArr<T> *new_leaf = new ManagedArr<T>(*leaf, len, leaf->len() - len);
+                delete leaf;
+                leaf = new_leaf;
             }
+            else if ( (start > 0) && ((start + len) < leaf->len()) )
+            {
+                Rope<T> *new_L = new Rope<T>();
+                
+                ManagedArr<T> *left_chunk = new ManagedArr<T>(*leaf, 0, start);
+                ManagedArr<T> *right_chunk = new ManagedArr<T>(*leaf, start + len, leaf->len() - (start + len));
+
+                new_L->L = new Rope<T>(*left_chunk);
+                new_L->R = new Rope<T>(*right_chunk);
+                L = new_L;
+                delete leaf;
+                leaf = nullptr;
+            }            
         }
+        
         else
         {
-            if ((start + len) < weight)
+            if (start == 0)
             {
-
+                if (len >= weight)
+                {
+                    delete L;
+                    L = R;
+                    R = nullptr;
+                    L->remove(0, len - weight);
+                }
+                else
+                {
+                    L->remove(0, len);
+                }
             }
-        }
+            if (start > 0)
+            {
+                if (start >= weight)
+                {
+                    if (R)
+                    {
+                        R->remove(start - weight, len);
+                    }
+                    else
+                    {
+                        throw std::out_of_range("start index greater than rope weight and no R subrope.");
+                    }
+                }
+                else
+                {
+                    if ((start + len) <= weight)
+                    {
+                        L->remove(start, len);
+                    }
+                    else
+                    {
+                        L->remove(start, weight - start);
+                        R->remove(0, len - (weight - start));
+                    }
+                }
+            }
 
-        return calc_length();
+        }
+        
+        calc_length();
+        return length;
     }
-    */
-    
+
     T get(unsigned int index) const
     {
         if (index >= length)

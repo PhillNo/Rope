@@ -20,11 +20,52 @@ int main()
         
         R1.insert(i, buff4);
         
+        std::cout << "*";
         for (int j = 0; j < R1.len(); j++)
         {
             std::cout << R1[j];
         }
-        std::cout << std::endl << std::flush;        
+
+        std::cout << "*" << std::endl << std::flush;        
     }
+
+    phillno::Rope<const char> R1 = phillno::Rope<const char>(buff1);
+    std::cout << std::endl << std::flush;
+
+    std::cout << "*";
+    for (int j = 0; j < R1.len(); j++)
+    {
+        std::cout << R1[j];
+    }
+    std::cout << "*" << std::endl << std::flush;
+
+    R1.remove(5, 1);
+    std::cout << "*";
+    for (int j = 0; j < R1.len(); j++)
+    {
+        std::cout << R1[j];
+    }
+    std::cout << "*" << std::endl << std::flush;
+
+
+    R1 = phillno::Rope<const char>(buff1);
+    R1.insert(6, buff3);
+
+    std::cout << "*";
+    for (int j = 0; j < R1.len(); j++)
+    {
+        std::cout << R1[j];
+    }
+    std::cout << "*" << std::endl << std::flush;
+
+    R1.remove(6, 10);
+    
+    std::cout << "*";
+    for (int j = 0; j < R1.len(); j++)
+    {
+        std::cout << R1[j];
+    }
+    std::cout << "*" << std::endl << std::flush;
+
     return 0;
 }
