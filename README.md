@@ -4,12 +4,12 @@ Not ready for use/forking/etc.
 
 Stll many todos:
 
-  Use newer C++ idioms for copy constructors
+  Done: Use direct initialization of const vars in constructors.
 
   Move function defs in the template header files outside the class def.
 
-  Fix camelcase.snake case inconsistencies
+  Done: Fix camelcase.snake case inconsistencies
 
-  Implement remove function in Rope class
+  Done: Implement remove function in Rope class
 
   Create a String class inheriting from Rope
