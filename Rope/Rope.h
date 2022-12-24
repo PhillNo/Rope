@@ -12,6 +12,28 @@ class Rope
 {
 public:
     Rope(){}
+
+    Rope(const Rope<T>& src)
+    {
+        weight = src.weight;
+        length = src.length;
+
+        if (src.L)
+        {
+            L = new Rope<T>(*src.L);
+        }
+
+        if (src.R)
+        {
+            L = new Rope<T>(*src.L);
+        }
+
+        if (src.leaf)
+        {
+            leaf = new ManagedArr<T>(*src.leaf);
+        }
+
+    }
     
     Rope(const ManagedArr<T> source_arr)
     {
