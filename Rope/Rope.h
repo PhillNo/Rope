@@ -13,7 +13,7 @@ class Rope
 public:
     Rope(){}
     
-    Rope(const ManagedArr<T>& source_arr)
+    Rope(const ManagedArr<T> source_arr)
     {
         leaf   = new ManagedArr<T>(source_arr);
         weight = source_arr.len();
@@ -36,7 +36,7 @@ public:
         }
     }
 
-    unsigned int insert(unsigned int index, const ManagedArr<T>& new_data)
+    unsigned int insert(unsigned int index, const ManagedArr<T> new_data)
     {
         if (index > length)
         {
