@@ -21,7 +21,7 @@ int main()
         R1.insert(i, buff4);
         
         std::cout << "*";
-        for (int j = 0; j < R1.len(); j++)
+        for (int j = 0; j < R1.length(); j++)
         {
             std::cout << R1[j];
         }
@@ -33,7 +33,7 @@ int main()
     std::cout << std::endl << std::flush;
 
     std::cout << "*";
-    for (int j = 0; j < R1.len(); j++)
+    for (int j = 0; j < R1.length(); j++)
     {
         std::cout << R1[j];
     }
@@ -41,7 +41,7 @@ int main()
 
     R1.remove(5, 1);
     std::cout << "*";
-    for (int j = 0; j < R1.len(); j++)
+    for (int j = 0; j < R1.length(); j++)
     {
         std::cout << R1[j];
     }
@@ -52,7 +52,7 @@ int main()
     R1.insert(6, buff3);
 
     std::cout << "*";
-    for (int j = 0; j < R1.len(); j++)
+    for (int j = 0; j < R1.length(); j++)
     {
         std::cout << R1[j];
     }
@@ -61,7 +61,7 @@ int main()
     R1.remove(6, 10);
     
     std::cout << "*";
-    for (int j = 0; j < R1.len(); j++)
+    for (int j = 0; j < R1.length(); j++)
     {
         std::cout << R1[j];
     }

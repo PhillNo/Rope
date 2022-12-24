@@ -15,8 +15,8 @@ public:
 
     Rope(const Rope<T>& src)
     {
-        weight = src.weight;
-        length = src.length;
+        wgt = src.wgt;
+        len = src.len;
 
         if (src.L)
         {
@@ -38,8 +38,8 @@ public:
     Rope(const ManagedArr<T> source_arr)
     {
         leaf   = new ManagedArr<T>(source_arr);
-        weight = source_arr.len();
-        length = weight;
+        wgt = source_arr.len();
+        len = wgt;
     }
     
     ~Rope()
@@ -60,17 +60,17 @@ public:
 
     unsigned int insert(unsigned int index, const ManagedArr<T> new_data)
     {
-        if (index > length)
+        if (index > len)
         {
-            throw std::out_of_range("OOR: max index for insertion is Rope.length");
+            throw std::out_of_range("OOR: max index for insertion is Rope.len");
         }
         else
         {
-            if (index >= weight)
+            if (index >= wgt)
             {
                 if (R)
                 {
-                    R->insert(index - weight, new_data);
+                    R->insert(index - wgt, new_data);
                 }
                 else
                 {
@@ -100,7 +100,7 @@ public:
             }
         }
         calc_length();
-        return length;
+        return len;
     }
 
     unsigned int remove(unsigned int start, unsigned int len)
@@ -138,12 +138,12 @@ public:
         {
             if (start == 0)
             {
-                if (len >= weight)
+                if (len >= wgt)
                 {
                     delete L;
                     L = R;
                     R = nullptr;
-                    L->remove(0, len - weight);
+                    L->remove(0, len - wgt);
                 }
                 else
                 {
@@ -152,27 +152,27 @@ public:
             }
             if (start > 0)
             {
-                if (start >= weight)
+                if (start >= wgt)
                 {
                     if (R)
                     {
-                        R->remove(start - weight, len);
+                        R->remove(start - wgt, len);
                     }
                     else
                     {
-                        throw std::out_of_range("start index greater than rope weight and no R subrope.");
+                        throw std::out_of_range("start index greater than rope wgt and no R subrope.");
                     }
                 }
                 else
                 {
-                    if ((start + len) <= weight)
+                    if ((start + len) <= wgt)
                     {
                         L->remove(start, len);
                     }
                     else
                     {
-                        L->remove(start, weight - start);
-                        R->remove(0, len - (weight - start));
+                        L->remove(start, wgt - start);
+                        R->remove(0, len - (wgt - start));
                     }
                 }
             }
@@ -180,23 +180,23 @@ public:
         }
         
         calc_length();
-        return length;
+        return len;
     }
 
     T at(unsigned int index) const
     {
-        if (index >= length)
+        if (index >= len)
         {
             throw std::out_of_range("Rope.at index OOR");
         }
         else
         {
 
-            if (index >= weight)
+            if (index >= wgt)
             {
-                return R->at(index - weight);
+                return R->at(index - wgt);
             }
-            if (index < weight)
+            if (index < wgt)
             {
                 if (L)
                 {
@@ -211,14 +211,14 @@ public:
         throw std::logic_error("error in Rope.at() implementation.");
     }
 
-    unsigned int wgt() const
+    unsigned int weight() const
     {
-        return weight;
+        return wgt;
     }
 
-    unsigned int len() const
+    unsigned int length() const
     {
-        return length;
+        return len;
     }
 
     inline T operator[](unsigned int index) const
@@ -230,31 +230,31 @@ protected:
     Rope<T> *L = nullptr;
     Rope<T> *R = nullptr;
     ManagedArr<T>* leaf = nullptr;
-    unsigned int weight = 0;
-    unsigned int length = 0;
+    unsigned int wgt = 0;
+    unsigned int len = 0;
 
     unsigned int calc_length()
     {
         if (leaf)
         {
-            weight = leaf->len();
-            length = weight;
+            wgt = leaf->len();
+            len = wgt;
             if (R)
             {
-                length += R->calc_length();
+                len += R->calc_length();
             }
         }
         else if (L)
         {
-            weight = L->calc_length();
-            length = weight;
+            wgt = L->calc_length();
+            len = wgt;
             if (R)
             {
-                length += R->calc_length();
+                len += R->calc_length();
             }
         }
 
-        return length;
+        return len;
     }
 
 };
