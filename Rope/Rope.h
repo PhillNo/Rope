@@ -7,10 +7,19 @@
 
 namespace phillno
 {
+
+//template <class T> class RopeIter;
+
 template <class T>
 class Rope
 {
 public:
+    //typedef RopeIter<T> iterator;
+    //typedef ptrdiff_t difference_type;
+    //typedef size_t size_type;
+    //typedef T value_type;
+    //typedef T * pointer;
+    //typedef T & reference;
     Rope(){}
 
     Rope(const Rope<T>& src)
@@ -57,6 +66,49 @@ public:
             delete R;
         }
     }
+
+    inline Rope<T>& operator=(const Rope<T>& src)
+    {
+        if (this != &src)
+        {
+            if (this->L)
+            {
+                delete this->L;
+                this->L = nullptr;
+            }
+            if (this->R)
+            {
+                delete this->R;
+                this->R = nullptr;
+            }
+            if (this->leaf)
+            {
+                delete this->leaf;
+                this->leaf = nullptr;
+            }
+
+            this->len = src.len;
+            this->wgt = src.wgt;
+            
+            if (src.L)
+            {
+                this->L = new Rope<T>(*src.L);
+            }
+            if (src.R)
+            {
+                this->R = new Rope<T>(*src.R);
+            }
+            if (src.leaf)
+            {
+                this->leaf = new ManagedArr<T>(*src.leaf);
+            }
+
+        }
+
+        return *this;
+    }
+    //Rope<T> operator=(ManagedArr<T> src);
+    //Rope<T> operator=(const T* src);
 
     unsigned int insert(unsigned int index, const ManagedArr<T> new_data)
     {
@@ -227,6 +279,7 @@ public:
     }
 
 protected:
+    //friend class RopeIter<T>;
     Rope<T> *L = nullptr;
     Rope<T> *R = nullptr;
     ManagedArr<T>* leaf = nullptr;
@@ -258,6 +311,8 @@ protected:
     }
 
 };
+
+// define RopeIter
 
 }
 

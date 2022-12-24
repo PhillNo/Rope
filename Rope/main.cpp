@@ -15,7 +15,7 @@ int main()
     
     for (int i = 0; i < 23; i++)
     {
-        phillno::Rope<const char> R1 = phillno::Rope<const char>(buff1);
+        phillno::Rope<const char> R1(buff1);
         R1.insert(6, buff3);
         
         R1.insert(i, buff4);
@@ -29,7 +29,7 @@ int main()
         std::cout << "*" << std::endl << std::flush;        
     }
 
-    phillno::Rope<const char> R1 = phillno::Rope<const char>(buff1);
+    phillno::Rope<const char> R1(buff1);
     std::cout << std::endl << std::flush;
 
     std::cout << "*";
