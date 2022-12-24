@@ -14,12 +14,6 @@ template <class T>
 class Rope
 {
 public:
-    //typedef RopeIter<T> iterator;
-    //typedef ptrdiff_t difference_type;
-    //typedef size_t size_type;
-    //typedef T value_type;
-    //typedef T * pointer;
-    //typedef T & reference;
     Rope(){}
 
     Rope(const Rope<T>& src)
@@ -313,6 +307,7 @@ protected:
 };
 
 // define RopeIter
+//template <class T> RopeIter();
 
 }
 
