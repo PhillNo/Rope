@@ -44,15 +44,15 @@ public:
     
     ~Rope()
     {
-        if (!leaf)
+        if (leaf)
         {
             delete leaf;
         }
-        if (!L)
+        if (L)
         {
             delete L;
         }
-        if (!R)
+        if (R)
         {
             delete R;
         }
