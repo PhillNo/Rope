@@ -93,9 +93,9 @@ public:
 
                     L = new Rope<T>();
                     L->L = left_chunk;
+                    L->R = middle_chunk;
                     R = new Rope<T>();
-                    R->L = middle_chunk;
-                    R->R = right_chunk;
+                    R->L = right_chunk;
                 }
             }
         }
