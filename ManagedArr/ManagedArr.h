@@ -73,7 +73,7 @@ public:
         return length;
     }
 
-    inline T get(unsigned int index) const
+    inline T at(unsigned int index) const
     {
         return (this->*ptr_get)(index);
     }
@@ -104,7 +104,7 @@ public:
     
     inline T operator[](unsigned int index) const
     {
-	    return get(index);  
+	    return at(index);  
     }
 
     T (ManagedArr::*ptr_get) (unsigned int) const = nullptr;

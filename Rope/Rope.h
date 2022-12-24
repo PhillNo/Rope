@@ -161,32 +161,32 @@ public:
         return length;
     }
 
-    T get(unsigned int index) const
+    T at(unsigned int index) const
     {
         if (index >= length)
         {
-            throw std::out_of_range("Rope.get index OOR");
+            throw std::out_of_range("Rope.at index OOR");
         }
         else
         {
 
             if (index >= weight)
             {
-                return R->get(index - weight);
+                return R->at(index - weight);
             }
             if (index < weight)
             {
                 if (L)
                 {
-                    return L->get(index);
+                    return L->at(index);
                 }
                 else if (leaf)
                 {
-                    return leaf->get(index);
+                    return leaf->at(index);
                 }
             }
         }
-        throw std::logic_error("error in Rope.get() implementation.");
+        throw std::logic_error("error in Rope.at() implementation.");
     }
 
     unsigned int wgt() const
@@ -201,7 +201,7 @@ public:
 
     inline T operator[](unsigned int index) const
     {
-	    return get(index);  
+	    return at(index);  
     }
 
 protected:
