@@ -4,14 +4,14 @@
 
 int main()
 {
-    char *const original  = new char[12]{'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'};
-    char *const newChunk  = new char[10]{'B','r','a','v','e',' ','N','e','w',' '};
-    char *const starChunk = new char[2]{'*', 0};
+    char *const original   = new char[12]{'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'};
+    char *const new_chunk  = new char[10]{'B','r','a','v','e',' ','N','e','w',' '};
+    char *const star_chunk = new char[2]{'*'};
 
     const phillno::ManagedArr<const char> buff1 = phillno::ManagedArr<const char>(original, 0, 12, phillno::AllocationType::DYNAMIC); 
     const phillno::ManagedArr<const char> buff2 = phillno::ManagedArr<const char>(buff1, 6, 6);
-    const phillno::ManagedArr<const char> buff3 = phillno::ManagedArr<const char>(newChunk, 0, 10, phillno::AllocationType::DYNAMIC); 
-    const phillno::ManagedArr<const char> buff4 = phillno::ManagedArr<const char>(starChunk, 0, 1, phillno::AllocationType::DYNAMIC);
+    const phillno::ManagedArr<const char> buff3 = phillno::ManagedArr<const char>(new_chunk, 0, 10, phillno::AllocationType::DYNAMIC); 
+    const phillno::ManagedArr<const char> buff4 = phillno::ManagedArr<const char>(star_chunk, 0, 1, phillno::AllocationType::DYNAMIC);
     
     for (int i = 0; i < 23; i++)
     {
