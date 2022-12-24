@@ -12,4 +12,6 @@ Stll many todos:
 
   Done: Implement remove function in Rope class
 
-  Create a String class inheriting from Rope
+  Add forward declarations for STL & string interfaces.
+     Each feature & testing of feature will be on it's own new branch (descendent branch
+     for new features that have dependencies on other new features).
