@@ -8,8 +8,6 @@
 namespace phillno
 {
 
-//template <class T> class RopeIter;
-
 template <class T>
 class Rope
 {
@@ -101,8 +99,6 @@ public:
 
         return *this;
     }
-    //Rope<T> operator=(ManagedArr<T> src);
-    //Rope<T> operator=(const T* src);
 
     unsigned int insert(unsigned int index, const ManagedArr<T> new_data)
     {
@@ -273,7 +269,6 @@ public:
     }
 
 protected:
-    //friend class RopeIter<T>;
     Rope<T> *L = nullptr;
     Rope<T> *R = nullptr;
     ManagedArr<T>* leaf = nullptr;
@@ -305,9 +300,6 @@ protected:
     }
 
 };
-
-// define RopeIter
-//template <class T> RopeIter();
 
 }
 
