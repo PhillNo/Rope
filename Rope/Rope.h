@@ -8,6 +8,8 @@
 namespace phillno
 {
 
+//template <class T> class RopeIter;
+
 template <class T>
 class Rope
 {
@@ -35,6 +37,7 @@ public:
     inline T operator[](unsigned int index) const;
 
 protected:
+    //friend class RopeIter<T>;
     Rope<T> *L = nullptr;
     Rope<T> *R = nullptr;
     ManagedArr<T>* leaf = nullptr;
@@ -44,6 +47,9 @@ protected:
     unsigned int calc_length();
 
 };
+
+// define RopeIter
+//template <class T> RopeIter();
 
 template <class T>
 Rope<T>::Rope(){}
