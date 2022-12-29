@@ -67,5 +67,7 @@ int main()
     }
     std::cout << "*" << std::endl << std::flush;
 
+    std::cout << R1.length() << std::endl;
+
     return 0;
 }
