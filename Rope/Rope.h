@@ -18,7 +18,7 @@ public:
 
     Rope(const Rope<T>& src);
     
-    Rope(const ManagedArr<T> source_arr);
+    Rope(const ManagedArr<T>& source_arr);
     
     ~Rope();
 
@@ -78,7 +78,7 @@ Rope<T>::Rope(const Rope<T>& src)
 }
 
 template <class T>
-Rope<T>::Rope(const ManagedArr<T> source_arr)
+Rope<T>::Rope(const ManagedArr<T>& source_arr)
 {
     leaf   = new ManagedArr<T>(source_arr);
     wgt = source_arr.len();

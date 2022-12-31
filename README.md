@@ -6,7 +6,7 @@ todos:
 
   Done: Move function bodies outside the class def.
 
-  Done: Fix camelcase.snake case inconsistencies
+  Done: Fix camelcase/snake case inconsistencies
 
   Done: Implement remove function in Rope class
 
