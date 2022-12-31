@@ -22,7 +22,7 @@ public:
 
     inline Rope<T>& operator=(const Rope<T>& src);
 
-    unsigned int insert(unsigned int index, const ManagedArr<T> new_data);
+    unsigned int insert(unsigned int index, const ManagedArr<T>& new_data);
 
     unsigned int remove(unsigned int start, unsigned int len);
 
@@ -138,7 +138,7 @@ inline Rope<T>& Rope<T>::operator=(const Rope<T> &src)
 }
 
 template <class T>
-unsigned int Rope<T>::insert(unsigned int index, const ManagedArr<T> new_data)
+unsigned int Rope<T>::insert(unsigned int index, const ManagedArr<T>& new_data)
 {
     if (index > len)
     {
