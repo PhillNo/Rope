@@ -1,6 +1,6 @@
 # Rope
 
-A Rope data structure which will serve as the underlying implementation of a string class.
+A Rope data structure which will serve as the underlying implementation of a string class. It will act as a drop-in replacement for std::string.
 
 The benefits of a Rope will be that
 
@@ -10,3 +10,9 @@ The benefits of a Rope will be that
 
 3. A rope is less sensitive to memory fragmentation because it does need to not occupy a single contiguous array.
 
+
+
+Todos:
+Use unique pointers for Rope class members
+Implement the String interface
+Test, debug, check for memory leaks, memory footprint, time complexity, benchmarking relative to std::string.
