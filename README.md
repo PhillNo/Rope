@@ -13,6 +13,8 @@ The benefits of a Rope will be that
 
 
 Todos:
-Use unique pointers for Rope class members
 Implement the String interface
 Test, debug, check for memory leaks, memory footprint, time complexity, benchmarking relative to std::string.
+
+*not going to use unique pointers. To minimize memory use at any point in time, when possible, nodes will be deleted before new nodes created and assigned.
+The assignment operator to a unique pointer will reset & release, but two pointed two objects will exist simultaneously in this case.
