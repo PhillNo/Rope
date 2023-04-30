@@ -51,6 +51,8 @@ public:
 protected:
     friend class RopeIter<T>;
 
+    //friend std::ostream& operator<<(std::ostream& os, const Rope<T>& myRope);
+
     Rope<T> *L = nullptr;
     Rope<T> *R = nullptr;
     ManagedArr<T>* leaf = nullptr;
@@ -60,6 +62,17 @@ protected:
     unsigned int calc_length();
 
 };
+
+template<class T>
+std::ostream& operator<<(std::ostream& os, const Rope<T>& myRope)
+{
+    for (unsigned int i = 0; i < myRope.length(); ++i)
+    {
+        os << myRope[i];
+    }
+
+    return os;
+}
 
 template <class T>
 class RopeIter
@@ -92,7 +105,7 @@ public:
 
 protected:
     Rope<T>& myRope;
-    int myPos;
+    unsigned int myPos;
 };
 
 template <class T>
