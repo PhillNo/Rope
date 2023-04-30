@@ -20,13 +20,7 @@ int main()
         
         R1.insert(i, buff4);
         
-        std::cout << "*";
-        for (int j = 0; j < R1.length(); j++)
-        {
-            std::cout << R1[j];
-        }
-
-        std::cout << "*" << std::endl << std::flush;        
+        std::cout << R1 << "*" << std::endl << std::flush;        
     }
 
     phillno::Rope<const char> R1(buff1);
