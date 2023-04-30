@@ -1,19 +1,28 @@
 #ifndef ROPE_H
 #define ROPE_H
 
+#include <cstddef>
 #include <iostream>
+#include <iterator>
 #include <stdexcept>
 #include "ManagedArr.h"
 
 namespace phillno
 {
 
-//template <class T> class RopeIter;
+template <class T> class RopeIter;
 
 template <class T>
 class Rope
 {
 public:
+    typedef RopeIter<T> iterator;
+    typedef ptrdiff_t difference_type;
+    typedef size_t size_type;
+    typedef T value_type;
+    typedef T * pointer;
+    typedef T & reference;
+
     Rope();
 
     Rope(const Rope<T>& src);
@@ -24,20 +33,24 @@ public:
 
     inline Rope<T>& operator=(const Rope<T>& src);
 
+    iterator begin() { return iterator(*this, 0);}
+    iterator end()   { return iterator(*this, len);}
+
     unsigned int insert(unsigned int index, const ManagedArr<T>& new_data);
 
     unsigned int remove(unsigned int start, unsigned int len);
 
-    T at(unsigned int index) const;
+    T& at(unsigned int index) const;
 
     inline unsigned int weight() const;
 
     inline unsigned int length() const;
 
-    inline T operator[](unsigned int index) const;
+    inline T& operator[](unsigned int index) const;
 
 protected:
-    //friend class RopeIter<T>;
+    friend class RopeIter<T>;
+
     Rope<T> *L = nullptr;
     Rope<T> *R = nullptr;
     ManagedArr<T>* leaf = nullptr;
@@ -48,8 +61,39 @@ protected:
 
 };
 
-// define RopeIter
-//template <class T> RopeIter();
+template <class T>
+class RopeIter
+{
+public:
+    RopeIter(Rope<T>& ropeArg, int size): myRope( ropeArg ), myPos( size )
+    {}
+
+    bool operator==(RopeIter<T>& comparee)
+    {
+        return (&myRope == &(comparee.myRope)) && (myPos == comparee.myPos);
+    }
+
+    bool operator!=(RopeIter<T>& comparee)
+    {
+        return !operator==(comparee);
+    }
+
+    T& operator*() { return myRope[myPos]; }
+
+    RopeIter<T>& operator++() { myPos++; return *this; }
+    
+    RopeIter<T>& operator--() { myPos++; return *this; }
+
+    RopeIter<T> operator++( int ) {RopeIter<T> clone(*this); ++myPos; return clone;}
+
+    RopeIter<T> operator--( int ) {RopeIter<T> clone(*this); --myPos; return clone;}
+
+
+
+protected:
+    Rope<T>& myRope;
+    int myPos;
+};
 
 template <class T>
 Rope<T>::Rope(){}
@@ -270,7 +314,7 @@ unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
 }
 
 template <class T>
-T Rope<T>::at(unsigned int index) const
+T& Rope<T>::at(unsigned int index) const
 {
     if (index >= len)
     {
@@ -311,7 +355,7 @@ inline unsigned int Rope<T>::length() const
 }
 
 template <class T>
-inline T Rope<T>::operator[](unsigned int index) const
+inline T& Rope<T>::operator[](unsigned int index) const
 {
     return at(index);
 }
@@ -340,6 +384,8 @@ unsigned int Rope<T>::calc_length()
 
     return len;
 }
+
+
 }
 
 #endif

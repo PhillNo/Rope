@@ -8,7 +8,7 @@ int main()
     char *const new_chunk  = new char[10]{'B','r','a','v','e',' ','N','e','w',' '};
     char *const star_chunk = new char[2]{'*'};
 
-    const phillno::ManagedArr<const char> buff1 = phillno::ManagedArr<const char>(original, 0, 12, phillno::AllocationType::DYNAMIC); 
+    const phillno::ManagedArr<const char> buff1 = phillno::ManagedArr<const char>(original, 0, 12,  phillno::AllocationType::DYNAMIC); 
     const phillno::ManagedArr<const char> buff2 = phillno::ManagedArr<const char>(buff1, 6, 6);
     const phillno::ManagedArr<const char> buff3 = phillno::ManagedArr<const char>(new_chunk, 0, 10, phillno::AllocationType::DYNAMIC); 
     const phillno::ManagedArr<const char> buff4 = phillno::ManagedArr<const char>(star_chunk, 0, 1, phillno::AllocationType::DYNAMIC);
@@ -33,17 +33,17 @@ int main()
     std::cout << std::endl << std::flush;
 
     std::cout << "*";
-    for (int j = 0; j < R1.length(); j++)
+    for (char myChar : R1)
     {
-        std::cout << R1[j];
+        std::cout << myChar;
     }
     std::cout << "*" << std::endl << std::flush;
 
     R1.remove(5, 1);
     std::cout << "*";
-    for (int j = 0; j < R1.length(); j++)
+    for (char myChar : R1)
     {
-        std::cout << R1[j];
+        std::cout << myChar;
     }
     std::cout << "*" << std::endl << std::flush;
 
@@ -52,22 +52,20 @@ int main()
     R1.insert(6, buff3);
 
     std::cout << "*";
-    for (int j = 0; j < R1.length(); j++)
+    for (char myChar : R1)
     {
-        std::cout << R1[j];
+        std::cout << myChar;
     }
     std::cout << "*" << std::endl << std::flush;
 
     R1.remove(6, 10);
     
     std::cout << "*";
-    for (int j = 0; j < R1.length(); j++)
+    for (char myChar : R1)
     {
-        std::cout << R1[j];
+        std::cout << myChar;
     }
-    std::cout << "*" << std::endl << std::flush;
-
-    std::cout << R1.length() << std::endl;
+    std::cout << "*\n\n" << std::flush;
 
     return 0;
 }

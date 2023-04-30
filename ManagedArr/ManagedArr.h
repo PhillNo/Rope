@@ -23,15 +23,15 @@ public:
 
     inline unsigned int len() const;
 
-    inline T at(unsigned int index) const;
+    inline T& at(unsigned int index) const;
 
-    inline T get_static_buff(unsigned int index) const;
+    inline T& get_static_buff(unsigned int index) const;
 
-    inline T get_shared_buff(unsigned int index) const;
+    inline T& get_shared_buff(unsigned int index) const;
     
-    inline T operator[](unsigned int index) const;
+    inline T& operator[](unsigned int index) const;
 
-    T (ManagedArr::*ptr_get) (unsigned int) const = nullptr;
+    T& (ManagedArr::*ptr_get) (unsigned int) const = nullptr;
 
 protected:
     const unsigned int length;
@@ -107,13 +107,13 @@ inline unsigned int ManagedArr<T>::len() const
 }
 
 template <class T>
-inline T ManagedArr<T>::at(unsigned int index) const
+inline T& ManagedArr<T>::at(unsigned int index) const
 {
     return (this->*ptr_get)(index);
 }
 
 template <class T>
-inline T ManagedArr<T>::get_static_buff(unsigned int index) const
+inline T& ManagedArr<T>::get_static_buff(unsigned int index) const
 {
     if (index < length)
     {
@@ -126,7 +126,7 @@ inline T ManagedArr<T>::get_static_buff(unsigned int index) const
 }
 
 template <class T>
-inline T ManagedArr<T>::get_shared_buff(unsigned int index) const
+inline T& ManagedArr<T>::get_shared_buff(unsigned int index) const
 {
     if (index < length)
     {
@@ -139,7 +139,7 @@ inline T ManagedArr<T>::get_shared_buff(unsigned int index) const
 }
 
 template <class T>
-inline T ManagedArr<T>::operator[](unsigned int index) const
+inline T& ManagedArr<T>::operator[](unsigned int index) const
 {
     return at(index);
 }
