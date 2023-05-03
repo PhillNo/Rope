@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <iostream>
 #include <iterator>
+#include <memory>
 #include <stdexcept>
 #include "ManagedArr.h"
 
@@ -51,16 +52,14 @@ public:
 protected:
     friend class RopeIter<T>;
 
-    //friend std::ostream& operator<<(std::ostream& os, const Rope<T>& myRope);
-
-    Rope<T> *L = nullptr;
-    Rope<T> *R = nullptr;
+    std::shared_ptr<Rope<T>> L;
+    std::shared_ptr<Rope<T>> R;
     ManagedArr<T>* leaf = nullptr;
     unsigned int wgt = 0;
     unsigned int len = 0;
 
     unsigned int calc_length();
-
+    
 };
 
 template<class T>
@@ -86,7 +85,7 @@ public:
         return (&myRope == &(comparee.myRope)) && (myPos == comparee.myPos);
     }
 
-    bool operator!=(RopeIter<T>& comparee)
+    inline bool operator!=(RopeIter<T>& comparee)
     {
         return !operator==(comparee);
     }
@@ -102,7 +101,6 @@ public:
     RopeIter<T> operator--( int ) {RopeIter<T> clone(*this); --myPos; return clone;}
 
 
-
 protected:
     Rope<T>& myRope;
     unsigned int myPos;
@@ -116,22 +114,13 @@ Rope<T>::Rope(const Rope<T>& src)
 {
     wgt = src.wgt;
     len = src.len;
-
-    if (src.L)
-    {
-        L = new Rope<T>(*src.L);
-    }
-
-    if (src.R)
-    {
-        L = new Rope<T>(*src.L);
-    }
+    L = src.L;
+    R = src.R;
 
     if (src.leaf)
     {
         leaf = new ManagedArr<T>(*src.leaf);
     }
-
 }
 
 template <class T>
@@ -145,17 +134,9 @@ Rope<T>::Rope(const ManagedArr<T>& source_arr)
 template <class T>
 Rope<T>::~Rope()
 {
-    if (!leaf)
+    if (leaf)
     {
         delete leaf;
-    }
-    if (!L)
-    {
-        delete L;
-    }
-    if (!R)
-    {
-        delete R;
     }
 }
 
@@ -164,36 +145,21 @@ inline Rope<T>& Rope<T>::operator=(const Rope<T> &src)
 {
     if (this != &src)
     {
-        if (this->L)
+        if (leaf)
         {
-            delete this->L;
-            this->L = nullptr;
-        }
-        if (this->R)
-        {
-            delete this->R;
-            this->R = nullptr;
-        }
-        if (this->leaf)
-        {
-            delete this->leaf;
-            this->leaf = nullptr;
+            delete leaf;
+            leaf = nullptr;
         }
 
-        this->len = src.len;
-        this->wgt = src.wgt;
+        len = src.len;
+        wgt = src.wgt;
 
-        if (src.L)
-        {
-            this->L = new Rope<T>(*src.L);
-        }
-        if (src.R)
-        {
-            this->R = new Rope<T>(*src.R);
-        }
+        L = src.L;
+        R = src.R;
+        
         if (src.leaf)
         {
-            this->leaf = new ManagedArr<T>(*src.leaf);
+            leaf = new ManagedArr<T>(*src.leaf);
         }
     }
 
@@ -211,18 +177,18 @@ unsigned int Rope<T>::insert(unsigned int index, const ManagedArr<T>& new_data)
     {
         if (index >= wgt)
         {
-            if (R)
+            if (R.get())
             {
                 R->insert(index - wgt, new_data);
             }
             else
             {
-                R = new Rope<T>(new_data);
+                R = std::shared_ptr<Rope<T>>(new Rope<T>(new_data));
             }
         }
         else
         {
-            if (L)
+            if (L.get())
             {
                 L->insert(index, new_data);
             }
@@ -234,11 +200,11 @@ unsigned int Rope<T>::insert(unsigned int index, const ManagedArr<T>& new_data)
                 delete leaf;
                 leaf = nullptr;
 
-                L = new Rope<T>();
-                L->L = left_chunk;
-                L->R = middle_chunk;
-                R = new Rope<T>();
-                R->L = right_chunk;
+                L = std::shared_ptr<Rope<T>>(new Rope<T>());
+                L->L = std::shared_ptr<Rope<T>>(left_chunk);
+                L->R = std::shared_ptr<Rope<T>>(middle_chunk);
+                R = std::shared_ptr<Rope<T>>(new Rope<T>());
+                R->L = std::shared_ptr<Rope<T>>(right_chunk);
             }
         }
     }
@@ -265,13 +231,12 @@ unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
         }
         else if ((start > 0) && ((start + len) < leaf->len()))
         {
-            Rope<T> *new_L = new Rope<T>();
-
+            std::shared_ptr<Rope<T>> new_L(new Rope<T>());
             ManagedArr<T> *left_chunk = new ManagedArr<T>(*leaf, 0, start);
             ManagedArr<T> *right_chunk = new ManagedArr<T>(*leaf, start + len, leaf->len() - (start + len));
 
-            new_L->L = new Rope<T>(*left_chunk);
-            new_L->R = new Rope<T>(*right_chunk);
+            new_L->L = std::shared_ptr<Rope<T>>(new Rope<T>(*left_chunk));
+            new_L->R = std::shared_ptr<Rope<T>>(new Rope<T>(*right_chunk));
             L = new_L;
             delete leaf;
             leaf = nullptr;
@@ -284,9 +249,8 @@ unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
         {
             if (len >= wgt)
             {
-                delete L;
                 L = R;
-                R = nullptr;
+                R = std::shared_ptr<Rope<T>>();
                 L->remove(0, len - wgt);
             }
             else
@@ -298,7 +262,7 @@ unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
         {
             if (start >= wgt)
             {
-                if (R)
+                if (R.get())
                 {
                     R->remove(start - wgt, len);
                 }
@@ -342,7 +306,7 @@ T& Rope<T>::at(unsigned int index) const
         }
         if (index < wgt)
         {
-            if (L)
+            if (L.get())
             {
                 return L->at(index);
             }
@@ -380,16 +344,16 @@ unsigned int Rope<T>::calc_length()
     {
         wgt = leaf->len();
         len = wgt;
-        if (R)
+        if (R.get())
         {
             len += R->calc_length();
         }
     }
-    else if (L)
+    else if (L.get())
     {
         wgt = L->calc_length();
         len = wgt;
-        if (R)
+        if (R.get())
         {
             len += R->calc_length();
         }
@@ -397,7 +361,6 @@ unsigned int Rope<T>::calc_length()
 
     return len;
 }
-
 
 }
 

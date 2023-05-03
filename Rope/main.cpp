@@ -28,14 +28,12 @@ int main()
 
     R1.remove(5, 1);
     std::cout << "*" << R1 << "*" << std::endl;
-
-
+    
     R1 = phillno::Rope<const char>(buff1);
     R1.insert(6, buff3);
     std::cout << "*" << R1 << "*" << std::endl;
-
     R1.remove(6, 10);
-    std::cout << "*" << R1 << "*\n\n" << std::endl;
+    std::cout << "*" << R1 << "*\n" << std::endl;
 
     return 0;
 
