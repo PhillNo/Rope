@@ -24,9 +24,7 @@ int main()
     }
 
     phillno::Rope<const char> R1(buff1);
-    std::cout << std::endl << std::flush;
-
-    std::cout << "*" << R1 << "*" << std::endl;
+    std::cout << "\n*" << R1 << "*" << std::endl;
 
     R1.remove(5, 1);
     std::cout << "*" << R1 << "*" << std::endl;
@@ -34,11 +32,9 @@ int main()
 
     R1 = phillno::Rope<const char>(buff1);
     R1.insert(6, buff3);
-
     std::cout << "*" << R1 << "*" << std::endl;
 
     R1.remove(6, 10);
-    
     std::cout << "*" << R1 << "*\n\n" << std::endl;
 
     return 0;
