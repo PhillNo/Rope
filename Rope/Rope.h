@@ -59,7 +59,7 @@ protected:
     unsigned int len = 0;
 
     unsigned int calc_length();
-
+    
 };
 
 template<class T>
@@ -101,7 +101,6 @@ public:
     RopeIter<T> operator--( int ) {RopeIter<T> clone(*this); --myPos; return clone;}
 
 
-
 protected:
     Rope<T>& myRope;
     unsigned int myPos;
@@ -115,22 +114,13 @@ Rope<T>::Rope(const Rope<T>& src)
 {
     wgt = src.wgt;
     len = src.len;
-
-    if (L.get())
-    {
-        L = std::shared_ptr<Rope<T>>(new Rope<T>(*src.L));
-    }
-
-    if (src.R)
-    {
-        R = std::shared_ptr<Rope<T>>(new Rope<T>(*src.R));
-    }
+    L = src.L;
+    R = src.R;
 
     if (src.leaf)
     {
         leaf = new ManagedArr<T>(*src.leaf);
     }
-
 }
 
 template <class T>
@@ -155,21 +145,21 @@ inline Rope<T>& Rope<T>::operator=(const Rope<T> &src)
 {
     if (this != &src)
     {
-        if (this->leaf)
+        if (leaf)
         {
-            delete this->leaf;
-            this->leaf = nullptr;
+            delete leaf;
+            leaf = nullptr;
         }
 
-        this->len = src.len;
-        this->wgt = src.wgt;
+        len = src.len;
+        wgt = src.wgt;
 
-        this->L = src.L; //std::shared_ptr<Rope<T>>(new Rope<T>(*src.L));
-        this->R = src.R; //std::shared_ptr<Rope<T>>(new Rope<T>(*src.R));
+        L = src.L;
+        R = src.R;
         
         if (src.leaf)
         {
-            this->leaf = new ManagedArr<T>(*src.leaf);
+            leaf = new ManagedArr<T>(*src.leaf);
         }
     }
 
@@ -371,7 +361,6 @@ unsigned int Rope<T>::calc_length()
 
     return len;
 }
-
 
 }
 
