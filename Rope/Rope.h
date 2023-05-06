@@ -42,6 +42,8 @@ public:
 
     unsigned int remove(unsigned int start, unsigned int len);
 
+    Rope<T> subrope(unsigned int start, unsigned int end);
+
     T& at(unsigned int index) const;
 
     inline unsigned int weight() const;
@@ -80,7 +82,7 @@ template <class T>
 class RopeIter
 {
 public:
-    RopeIter(Rope<T>& ropeArg, int size): myRope( ropeArg ), myPos( size )
+    RopeIter(Rope<T>& ropeArg, int length): myRope( ropeArg ), myPos( length )
     {}
 
     bool operator==(RopeIter<T>& comparee)
