@@ -91,9 +91,9 @@ ManagedArr<T>::ManagedArr(const ManagedArr &source, unsigned int offset_increase
     }
     else
     {
-        ptr_get = source.ptr_get;
-        static_buff = source.static_buff;
-        shared_buff = source.shared_buff;
+        this->ptr_get = source.ptr_get;
+        this->static_buff = source.static_buff;
+        this->shared_buff = source.shared_buff;
     }
 }
 
