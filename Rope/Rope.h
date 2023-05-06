@@ -38,6 +38,8 @@ public:
 
     unsigned int insert(unsigned int index, const ManagedArr<T>& new_data);
 
+    unsigned int insert(unsigned int index, const Rope<T>& new_data);
+
     unsigned int remove(unsigned int start, unsigned int len);
 
     T& at(unsigned int index) const;
@@ -164,36 +166,36 @@ inline Rope<T>& Rope<T>::operator=(const Rope<T> &src)
 {
     if (this != &src)
     {
-        if (this->L)
+        if (L)
         {
-            delete this->L;
-            this->L = nullptr;
+            delete L;
+            L = nullptr;
         }
-        if (this->R)
+        if (R)
         {
-            delete this->R;
-            this->R = nullptr;
+            delete R;
+            R = nullptr;
         }
-        if (this->leaf)
+        if (leaf)
         {
-            delete this->leaf;
-            this->leaf = nullptr;
+            delete leaf;
+            leaf = nullptr;
         }
 
-        this->len = src.len;
-        this->wgt = src.wgt;
+        len = src.len;
+        wgt = src.wgt;
 
         if (src.L)
         {
-            this->L = new Rope<T>(*src.L);
+            L = new Rope<T>(*src.L);
         }
         if (src.R)
         {
-            this->R = new Rope<T>(*src.R);
+            R = new Rope<T>(*src.R);
         }
         if (src.leaf)
         {
-            this->leaf = new ManagedArr<T>(*src.leaf);
+            leaf = new ManagedArr<T>(*src.leaf);
         }
     }
 
@@ -234,6 +236,51 @@ unsigned int Rope<T>::insert(unsigned int index, const ManagedArr<T>& new_data)
                 delete leaf;
                 leaf = nullptr;
 
+                L = new Rope<T>();
+                L->L = left_chunk;
+                L->R = middle_chunk;
+                R = new Rope<T>();
+                R->L = right_chunk;
+            }
+        }
+    }
+    calc_length();
+    return len;
+}
+
+template <class T>
+unsigned int Rope<T>::insert(unsigned int index, const Rope<T>& new_data)
+{
+    if (index > len)
+    {
+        throw std::out_of_range("OOR: max index for insertion is Rope.len");
+    }
+    else
+    {
+        if (index >= wgt)
+        {
+            if (R)
+            {
+                R->insert(index - wgt, new_data);
+            }
+            else
+            {
+                R = new Rope<T>(new_data);
+            }
+        }
+        else
+        {
+            if (L)
+            {
+                L->insert(index, new_data);
+            }
+            else
+            {
+                Rope<T> *left_chunk   = new Rope<T>(*(new ManagedArr<T>(*leaf, 0, index)));
+                Rope<T> *right_chunk  = new Rope<T>(*(new ManagedArr<T>(*leaf, index, leaf->len() - index)));
+                Rope<T> *middle_chunk = new Rope<T>(new_data);
+                delete leaf;
+                leaf = nullptr;
                 L = new Rope<T>();
                 L->L = left_chunk;
                 L->R = middle_chunk;
