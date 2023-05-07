@@ -248,7 +248,7 @@ unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
         {
             leaf = leaf.subspan(0, start);
         }
-        else if (start == 0) //remove left/keep right
+        else if (start == 0) //remove left half/keep right right
         {
             if ((start + len) < leaf.size())
             {
@@ -256,7 +256,7 @@ unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
             }
             else
             {
-                leaf = std::span<T>();
+                leaf = std::span<T>(); //Remove whole leaf. (Parent should delete this Rope.)
             }
         }
         else if ((start > 0) && ((start + len) < leaf.size())) //remove middle
@@ -274,7 +274,11 @@ unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
     {
         if (start == 0)
         {
-            if (len >= wgt)
+            if (len >= this->len)
+            {
+                throw std::out_of_range("Indexing beyond (sub)Rope length.");
+            }
+            else if (len >= wgt)
             {
                 if (L)
                 {
@@ -291,11 +295,19 @@ unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
         }
         if (start > 0)
         {
-            if (start >= wgt)
+            if (start >= wgt) //and/or len in body
             {
                 if (R)
                 {
-                    R->remove(start - wgt, len);
+                    if (len >= R->length()) //efficiency gain to prevent empty Rope. Not critical.
+                    {
+                        delete R;
+                        R = nullptr;
+                    }
+                    else
+                    {
+                        R->remove(start - wgt, len);
+                    }
                 }
                 else
                 {
@@ -391,7 +403,6 @@ unsigned int Rope<T>::calc_length()
 
     return len;
 }
-
 
 }
 
