@@ -227,11 +227,11 @@ unsigned int Rope<T>::insert(unsigned int index, const Rope<T>& new_data)
                 Rope<T> *right_chunk  = new Rope<T>(leaf.subspan(index, leaf.size() - index));
                 Rope<T> *middle_chunk = new Rope<T>(new_data);
                 leaf = std::span<T>();
+                
                 L = new Rope<T>();
                 L->L = left_chunk;
                 L->R = middle_chunk;
-                R = new Rope<T>();
-                R->L = right_chunk;
+                R = right_chunk;
             }
         }
     }
