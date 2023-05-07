@@ -57,11 +57,11 @@ protected:
 
     //friend std::ostream& operator<<(std::ostream& os, const Rope<T>& myRope);
 
-    Rope<T> *L = nullptr;
-    Rope<T> *R = nullptr;
-    ManagedArr<T>* leaf = nullptr;
-    unsigned int wgt = 0;
-    unsigned int len = 0;
+    Rope<T> *L { nullptr };
+    Rope<T> *R { nullptr };
+    ManagedArr<T>* leaf {nullptr };
+    unsigned int wgt { 0 };
+    unsigned int len { 0 };
 
     unsigned int calc_length();
 
@@ -113,7 +113,8 @@ protected:
 };
 
 template <class T>
-Rope<T>::Rope(){}
+Rope<T>::Rope()
+{}
 
 template <class T>
 Rope<T>::Rope(const Rope<T>& src)
@@ -377,7 +378,7 @@ unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
 
 template <class T>
 T& Rope<T>::at(unsigned int index) const
-{
+{    
     if (index >= len)
     {
         throw std::out_of_range("Rope.at index OOR");

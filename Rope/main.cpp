@@ -47,6 +47,11 @@ int main()
     R1.remove(6, 10);
     std::cout << "*" << R1 << "*\n" << std::endl;
 
+    phillno::Rope<int> R5 {};// = phillno::Rope<int>(); // Rope<int> R5(); is not a constructor!
+    std::cout << "*" << R5 << "*" << std::endl;
+    //int r5 = R5.at(0);
+    //std::cout << "*" << r5 << "*" << std::endl;
+
     return 0;
 
 }
