@@ -4,8 +4,8 @@
 #include <cstddef>
 #include <iostream>
 #include <iterator>
+#include <span>
 #include <stdexcept>
-#include "ManagedArr.h"
 
 namespace phillno
 {
@@ -27,16 +27,16 @@ public:
 
     Rope(const Rope<T>& src);
     
-    Rope(const ManagedArr<T>& source_arr);
+    Rope(const std::span<T>& src);
     
     ~Rope();
 
-    inline Rope<T>& operator=(const Rope<T>& src);
+    inline void operator=(const Rope<T>& src);
 
     iterator begin() { return iterator(*this, 0);}
     iterator end()   { return iterator(*this, len);}
 
-    unsigned int insert(unsigned int index, const ManagedArr<T>& new_data);
+    unsigned int insert(unsigned int index, const std::span<T>& new_data);
 
     unsigned int insert(unsigned int index, const Rope<T>& new_data);
 
@@ -57,7 +57,7 @@ protected:
 
     Rope<T> *L { nullptr };
     Rope<T> *R { nullptr };
-    ManagedArr<T>* leaf {nullptr };
+    std::span<T> leaf = std::span<T>();
     unsigned int wgt { 0 };
     unsigned int len { 0 };
 
@@ -127,31 +127,24 @@ Rope<T>::Rope(const Rope<T>& src)
 
     if (src.R)
     {
-        L = new Rope<T>(*src.L);
+        R = new Rope<T>(*src.R);
     }
 
-    if (src.leaf)
-    {
-        leaf = new ManagedArr<T>(*src.leaf);
-    }
+    leaf = src.leaf;
 
 }
 
 template <class T>
-Rope<T>::Rope(const ManagedArr<T>& source_arr)
+Rope<T>::Rope(const std::span<T>& source_arr)
 {
-    leaf   = new ManagedArr<T>(source_arr);
-    wgt = source_arr.len();
+    leaf = source_arr;
+    wgt = source_arr.size();
     len = wgt;
 }
 
 template <class T>
 Rope<T>::~Rope()
 {
-    if (!leaf)
-    {
-        delete leaf;
-    }
     if (!L)
     {
         delete L;
@@ -163,7 +156,7 @@ Rope<T>::~Rope()
 }
 
 template <class T>
-inline Rope<T>& Rope<T>::operator=(const Rope<T> &src)
+inline void Rope<T>::operator=(const Rope<T>& src)
 {
     if (this != &src)
     {
@@ -177,14 +170,10 @@ inline Rope<T>& Rope<T>::operator=(const Rope<T> &src)
             delete R;
             R = nullptr;
         }
-        if (leaf)
-        {
-            delete leaf;
-            leaf = nullptr;
-        }
-
+        
         len = src.len;
         wgt = src.wgt;
+        leaf = src.leaf;
 
         if (src.L)
         {
@@ -194,59 +183,16 @@ inline Rope<T>& Rope<T>::operator=(const Rope<T> &src)
         {
             R = new Rope<T>(*src.R);
         }
-        if (src.leaf)
-        {
-            leaf = new ManagedArr<T>(*src.leaf);
-        }
+        
     }
-
-    return *this;
 }
 
 template <class T>
-unsigned int Rope<T>::insert(unsigned int index, const ManagedArr<T>& new_data)
+unsigned int Rope<T>::insert(unsigned int index, const std::span<T>& new_data)
 {
-    if (index > len)
-    {
-        throw std::out_of_range("OOR: max index for insertion is Rope.len");
-    }
-    else
-    {
-        if (index >= wgt)
-        {
-            if (R)
-            {
-                R->insert(index - wgt, new_data);
-            }
-            else
-            {
-                R = new Rope<T>(new_data);
-            }
-        }
-        else
-        {
-            if (L)
-            {
-                L->insert(index, new_data);
-            }
-            else
-            {
-                Rope<T> *left_chunk = new Rope<T>(*(new ManagedArr<T>(*leaf, 0, index)));
-                Rope<T> *right_chunk = new Rope<T>(*(new ManagedArr<T>(*leaf, index, leaf->len() - index)));
-                Rope<T> *middle_chunk = new Rope<T>(*(new ManagedArr<T>(new_data)));
-                delete leaf;
-                leaf = nullptr;
+    Rope<T> new_rope(new_data);
 
-                L = new Rope<T>();
-                L->L = left_chunk;
-                L->R = middle_chunk;
-                R = new Rope<T>();
-                R->L = right_chunk;
-            }
-        }
-    }
-    calc_length();
-    return len;
+    return insert(index, new_rope);
 }
 
 template <class T>
@@ -277,11 +223,10 @@ unsigned int Rope<T>::insert(unsigned int index, const Rope<T>& new_data)
             }
             else
             {
-                Rope<T> *left_chunk   = new Rope<T>(*(new ManagedArr<T>(*leaf, 0, index)));
-                Rope<T> *right_chunk  = new Rope<T>(*(new ManagedArr<T>(*leaf, index, leaf->len() - index)));
+                Rope<T> *left_chunk   = new Rope<T>(leaf.subspan(0, index));
+                Rope<T> *right_chunk  = new Rope<T>(leaf.subspan(index, leaf.size() - index));
                 Rope<T> *middle_chunk = new Rope<T>(new_data);
-                delete leaf;
-                leaf = nullptr;
+                leaf = std::span<T>();
                 L = new Rope<T>();
                 L->L = left_chunk;
                 L->R = middle_chunk;
@@ -297,32 +242,31 @@ unsigned int Rope<T>::insert(unsigned int index, const Rope<T>& new_data)
 template <class T>
 unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
 {
-    if (leaf)
+    if (!leaf.empty())
     {
-        if ((start > 0) && ((start + len) >= leaf->len()))
+        if ((start > 0) && ((start + len) >= leaf.size())) //remove right half/keep left
         {
-            ManagedArr<T> *new_leaf = new ManagedArr<T>(*leaf, 0, start);
-            delete leaf;
-            leaf = new_leaf;
+            leaf = leaf.subspan(0, start);
         }
-        else if ((start == 0) && ((start + len) <= leaf->len()))
+        else if (start == 0) //remove left/keep right
         {
-            ManagedArr<T> *new_leaf = new ManagedArr<T>(*leaf, len, leaf->len() - len);
-            delete leaf;
-            leaf = new_leaf;
+            if ((start + len) < leaf.size())
+            {
+                leaf = leaf.subspan(len, leaf.size() - len);
+            }
+            else
+            {
+                leaf = std::span<T>();
+            }
         }
-        else if ((start > 0) && ((start + len) < leaf->len()))
+        else if ((start > 0) && ((start + len) < leaf.size())) //remove middle
         {
-            Rope<T> *new_L = new Rope<T>();
+            std::span<T> left_chunk  = leaf.subspan(0, start);
+            std::span<T> right_chunk = leaf.subspan(start + len, leaf.size() - (start + len));
 
-            ManagedArr<T> *left_chunk = new ManagedArr<T>(*leaf, 0, start);
-            ManagedArr<T> *right_chunk = new ManagedArr<T>(*leaf, start + len, leaf->len() - (start + len));
-
-            new_L->L = new Rope<T>(*left_chunk);
-            new_L->R = new Rope<T>(*right_chunk);
-            L = new_L;
-            delete leaf;
-            leaf = nullptr;
+            L = new Rope<T>(left_chunk);
+            R = new Rope<T>(right_chunk);
+            leaf = std::span<T>();
         }
     }
 
@@ -332,7 +276,10 @@ unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
         {
             if (len >= wgt)
             {
-                delete L;
+                if (L)
+                {
+                    delete L;
+                }
                 L = R;
                 R = nullptr;
                 L->remove(0, len - wgt);
@@ -394,9 +341,9 @@ T& Rope<T>::at(unsigned int index) const
             {
                 return L->at(index);
             }
-            else if (leaf)
+            else if (!leaf.empty())
             {
-                return leaf->at(index);
+                return leaf[index];
             }
         }
     }
@@ -424,14 +371,13 @@ inline T& Rope<T>::operator[](unsigned int index) const
 template <class T>
 unsigned int Rope<T>::calc_length()
 {
-    if (leaf)
+    wgt = 0;
+    len = 0;
+
+    if (leaf.size() != 0)
     {
-        wgt = leaf->len();
+        wgt = leaf.size();
         len = wgt;
-        if (R)
-        {
-            len += R->calc_length();
-        }
     }
     else if (L)
     {
