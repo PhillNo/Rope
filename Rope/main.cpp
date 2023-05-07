@@ -26,35 +26,35 @@ int main()
         phillno::Rope<const char> star_rope(buff4);
         R1.insert(i, star_rope); //insert rope
 
-        std::cout << "*" << R1 << "*" << std::endl << std::flush;        
+        cout << "*" << R1 << "*" << endl << flush;        
     }
 
     phillno::Rope<const char> R1(buff1);
-    std::cout << "\n*" << R1 << "*" << std::endl;
+    cout << "\n*" << R1 << "*" << endl;
 
     R1.remove(5, 1);
-    std::cout << "*" << R1 << "*" << std::endl;
+    cout << "*" << R1 << "*" << endl;
 
     R1 = phillno::Rope<const char>(buff1);
-    std::cout << "*" << R1 << "*" << std::endl;
+    cout << "*" << R1 << "*" << endl;
     auto R3 = phillno::Rope<const char>(buff3);
     R1.insert(6, R3);
-    std::cout << "*" << R1 << "*" << std::endl;
+    cout << "*" << R1 << "*" << endl;
 
     //ensure no side effects in R1 due to changes in R3
     auto R4 = phillno::Rope<const char>(buff4);
     R3.insert(0, R4);
     R3.insert(R3.length(), R4);
     
-    std::cout << "*" << R1 << "*" << std::endl;
+    cout << "*" << R1 << "*" << endl;
 
     R1.remove(6, 10);
-    std::cout << "*" << R1 << "*\n" << std::endl;
+    cout << "*" << R1 << "*\n" << endl;
     
     //phillno::Rope<int> R5 {};// = phillno::Rope<int>(); // Rope<int> R5(); is not a constructor!
-    //std::cout << "*" << R5 << "*" << std::endl;
+    //cout << "*" << R5 << "*" << endl;
     //int r5 = R5.at(0);
-    //std::cout << "*" << r5 << "*" << std::endl;
+    //cout << "*" << r5 << "*" << endl;
 
 
     return 0;
