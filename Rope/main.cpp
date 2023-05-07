@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <span>
 #include "Rope.h"
 
 int main()
@@ -7,6 +8,17 @@ int main()
     char *const original   = new char[12]{'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'};
     char *const new_chunk  = new char[10]{'B','r','a','v','e',' ','N','e','w',' '};
     char *const star_chunk = new char[2]{'*'};
+
+    std::span<const char> original_span   = std::span(original, 12);
+    std::span<const char> new_chunk_span  = std::span(original, 10);
+    std::span<const char> star_chunk_span = std::span(original, 2);
+
+    //for (auto el : mySpan)
+    //{
+    //    std::cout << el;
+    //}
+    //std::cout << std::endl;
+
 
     auto buff1 = phillno::ManagedArr<const char>(original, 0, 12,  phillno::AllocationType::STATIC); 
     auto buff2 = phillno::ManagedArr<const char>(buff1, 6, 6);

@@ -55,8 +55,6 @@ public:
 protected:
     friend class RopeIter<T>;
 
-    //friend std::ostream& operator<<(std::ostream& os, const Rope<T>& myRope);
-
     Rope<T> *L { nullptr };
     Rope<T> *R { nullptr };
     ManagedArr<T>* leaf {nullptr };
