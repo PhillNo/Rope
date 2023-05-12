@@ -1,7 +1,5 @@
 #include <iostream>
-#include <cstring>
 #include <span>
-#include "ManagedArr.h"
 #include "Rope.h"
 
 using std::cout;
@@ -10,13 +8,9 @@ using std::flush;
 
 int main()
 {
-    char *const original   = new char[12]{'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'};
-    char *const new_chunk  = new char[10]{'B','r','a','v','e',' ','N','e','w',' '};
-    char *const star_chunk = new char[1]{'*'};
-
-    auto buff1 = std::span<const char>(original, 12); 
-    auto buff3 = std::span<const char>(new_chunk, 10); 
-    auto buff4 = std::span<const char>(star_chunk, 1);
+    auto buff1 = std::span<const char>(new char[12]{'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'}, 12); 
+    auto buff3 = std::span<const char>(new char[10]{'B','r','a','v','e',' ','N','e','w',' '}, 10); 
+    auto buff4 = std::span<const char>(new char[1]{'*'}, 1);
 
     for (int i = 0; i < 23; i++)
     {
@@ -35,7 +29,7 @@ int main()
     R1.remove(5, 1);
     cout << "*" << R1 << "*" << endl;
 
-    R1 = phillno::Rope<const char>(buff1);
+    R1 = phillno::Rope<const char>(buff1); //test copy constructor
     cout << "*" << R1 << "*" << endl;
     auto R3 = phillno::Rope<const char>(buff3);
     R1.insert(6, R3);

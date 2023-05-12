@@ -1,7 +1,6 @@
 #ifndef ROPE_H
 #define ROPE_H
 
-#include <cstddef>
 #include <iostream>
 #include <iterator>
 #include <span>
