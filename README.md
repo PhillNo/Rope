@@ -8,7 +8,7 @@ The benefits of a Rope are:
 
 2. Insertions into the Rope will not require reallocation and copying. Instead, new leafs are inserted in O(logn) time. Only original leafs are allocated. This can reduce peaks in memory use during the copying of an old String to a new String instance if a concatenated String is larger than its parent.
 
-3. A Rope requires less contiguous memory allocation since it is comprised on pointers to other Ropes (and std::span at the leafs).
+3. A Rope requires less contiguous memory allocation since it is comprised of pointers to other Ropes (and std::span at the leafs).
 
 
 
@@ -21,4 +21,4 @@ Implement more std::string features into Rope.
 
 Clean up const, const function, inline and other prefix/postfix usages. This was not consistently applied.
 
-typed Rope<char char> stringR
+typedef between Rope and new name for Rope of char.
