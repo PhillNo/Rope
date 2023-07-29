@@ -20,7 +20,7 @@ Allow construction and insertion of type T
 
 Implement more Iterator traits.
 
-Implement more std::string .
+Implement more std::string.
 
-typedef for Rope<char> as a std::string replacement
+Implement typedef for Rope<char> as a std::string replacement
 
