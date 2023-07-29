@@ -197,9 +197,32 @@ unsigned int Rope<T>::insert(unsigned int index, const std::span<T>& new_data)
 template <class T>
 unsigned int Rope<T>::insert(unsigned int index, const Rope<T>& new_data)
 {
-    if (index > len)
+    if (index >= len)
     {
-        throw std::out_of_range("OOR: max index for insertion is Rope.len");
+        if (index == len)
+        {
+            if (R)
+            {
+                R->insert(index - wgt, new_data);
+            }
+            else
+            {
+                if (L)
+                {
+                    R = new Rope<T>(new_data);
+                }
+                else
+                {
+                    L = new Rope<T>(leaf);
+                    R = new Rope<T>(new_data);
+                    leaf = std::span<T>();
+                }
+            }
+        }
+        else
+        {
+            throw std::out_of_range("OOR: max index for insertion is Rope.len");
+        }
     }
     else
     {
@@ -234,6 +257,7 @@ unsigned int Rope<T>::insert(unsigned int index, const Rope<T>& new_data)
             }
         }
     }
+
     calc_length();
     return len;
 }
