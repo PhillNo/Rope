@@ -14,11 +14,13 @@ The benefits of a Rope are:
 
 Todos:
 
+Replace recursion with a loop and stack
+
+Allow construction and insertion of type T
+
 Implement more Iterator traits.
 
+Implement more std::string .
 
-Implement more std::string features into Rope.
+typedef for Rope<char> as a std::string replacement
 
-Clean up const, const function, inline and other prefix/postfix usages. This was not consistently applied.
-
-typedef between Rope and new name for Rope of char.
