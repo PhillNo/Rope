@@ -1,3 +1,25 @@
+/*
+
+Rope.h
+Rope class
+RopeIter class
+Supporting functions
+
+Author: PhillNo
+
+Date: Spring 2023
+
+Description:
+A Rope is a template container for variable sized collections of data. It's purpose is to store
+data in a non-contiguous memory allocation. The underlying implementation is a binary tree.
+
+Leaf nodes of the tree contain a std::span where instances of T are stored. Multiple std::span objects can
+point to the same array of T. This allows fast reuse of substrings and inherent compression.
+
+Insertion, deletion, peek take place in O(logn) time complexity.
+
+*/
+
 #ifndef ROPE_H
 #define ROPE_H
 
@@ -15,6 +37,7 @@ template <class T>
 class Rope
 {
 public:
+    // typedefs necessary to some STL functions
     typedef RopeIter<T> iterator;
     typedef ptrdiff_t difference_type;
     typedef size_t size_type;
@@ -27,49 +50,78 @@ public:
     Rope(const Rope<T>& src);
     
     Rope(const std::span<T>& src);
+
+    //Rope(T);
     
     ~Rope();
 
-    inline void operator=(const Rope<T>& src);
-
+    // Returned iterator objects used by 
+    // STL and implicitly by range-based loops
     iterator begin() { return iterator(*this, 0);}
     iterator end()   { return iterator(*this, len);}
 
+    // returns size of Rope instance after modification
     unsigned int insert(unsigned int index, const std::span<T>& new_data);
 
     unsigned int insert(unsigned int index, const Rope<T>& new_data);
 
+    //unsigned int insert(unsigned int index, T val);
+
+    //returns size of Rope instance after modification
     unsigned int remove(unsigned int start, unsigned int len);
 
+    // Generates a new Rope that contains element spanned by start & end
     Rope<T> subrope(unsigned int start, unsigned int end);
 
+    // Returns reference to element at indez
     T& at(unsigned int index) const;
 
+    // Returns the number of elements to the left of root
+    // in the tree structure implemented by Rope
     inline unsigned int weight() const;
 
+    // Returns the total number of elements below root
+    // in the tree structure implemented by Rope
     inline unsigned int length() const;
 
+    // Assignment operator used by copy constructor
+    inline void operator=(const Rope<T>& src);
+
+    // Shorthand for Rope::at
     inline T& operator[](unsigned int index) const;
 
 protected:
+    // Rope elements must be exposed to RopeIter
     friend class RopeIter<T>;
 
+    // Left & right branches of tree structure
     Rope<T> *L { nullptr };
     Rope<T> *R { nullptr };
+
+    // leaf contains the data elements in the Rope collection
+    // If the leaf is non-empty then L & R MUST BE NULL
     std::span<T> leaf = std::span<T>();
+
+    // Elements to left of root
     unsigned int wgt { 0 };
+
+    // Elements to right of root
     unsigned int len { 0 };
 
+    // calc_length must be called any time a Rope is modified
+    // or if changes to a subrope must propagate up
     unsigned int calc_length();
 
 };
 
+// Feed T elements into a std::ostream
+// May not be compatible with all T
 template<class T>
-std::ostream& operator<<(std::ostream& os, const Rope<T>& myRope)
+std::ostream& operator<<(std::ostream& os, const Rope<T>& iterand)
 {
-    for (unsigned int i = 0; i < myRope.length(); ++i)
+    for (unsigned int i = 0; i < iterand.length(); ++i)
     {
-        os << myRope[i];
+        os << iterand[i];
     }
 
     return os;
@@ -79,34 +131,33 @@ template <class T>
 class RopeIter
 {
 public:
-    RopeIter(Rope<T>& ropeArg, int length): myRope( ropeArg ), myPos( length )
+    RopeIter(Rope<T>& rope_target, int length): iterand( rope_target ), pos( length )
     {}
 
-    bool operator==(RopeIter<T>& comparee)
+    bool operator==(RopeIter<T>& comparand)
     {
-        return (&myRope == &(comparee.myRope)) && (myPos == comparee.myPos);
+        return (&iterand == &(comparand.iterand)) && (pos == comparand.pos);
     }
 
-    bool operator!=(RopeIter<T>& comparee)
+    bool operator!=(RopeIter<T>& comparand)
     {
-        return !operator==(comparee);
+        return !operator==(comparand);
     }
 
-    T& operator*() { return myRope[myPos]; }
+    T& operator*() { return iterand[pos]; }
 
-    RopeIter<T>& operator++() { myPos++; return *this; }
+    RopeIter<T>& operator++() { pos++; return *this; }
     
-    RopeIter<T>& operator--() { myPos++; return *this; }
+    RopeIter<T>& operator--() { pos++; return *this; }
 
-    RopeIter<T> operator++( int ) {RopeIter<T> clone(*this); ++myPos; return clone;}
+    //post increment operator clones "this" in order to return unmodified version
+    RopeIter<T> operator++( int ) {RopeIter<T> clone(*this); ++pos; return clone;}
 
-    RopeIter<T> operator--( int ) {RopeIter<T> clone(*this); --myPos; return clone;}
-
-
+    RopeIter<T> operator--( int ) {RopeIter<T> clone(*this); --pos; return clone;}
 
 protected:
-    Rope<T>& myRope;
-    unsigned int myPos;
+    Rope<T>& iterand; // Rope which will be iterated over
+    unsigned int pos; // position in Rope iteration
 };
 
 template <class T>
@@ -116,6 +167,8 @@ Rope<T>::Rope()
 template <class T>
 Rope<T>::Rope(const Rope<T>& src)
 {
+    // Copying a Rope from a Rope creates new independent tree
+
     wgt = src.wgt;
     len = src.len;
 
@@ -197,6 +250,9 @@ unsigned int Rope<T>::insert(unsigned int index, const std::span<T>& new_data)
 template <class T>
 unsigned int Rope<T>::insert(unsigned int index, const Rope<T>& new_data)
 {
+    // Always call calc_length when modifying Rope
+    // A Rope with a leaf should never have L or R branches
+
     if (index >= len)
     {
         if (index == len)
@@ -265,6 +321,9 @@ unsigned int Rope<T>::insert(unsigned int index, const Rope<T>& new_data)
 template <class T>
 unsigned int Rope<T>::remove(unsigned int start, unsigned int len)
 {
+    // Always call calc_length when modifying Rope
+    // A Rope with a leaf should never have L or R branches
+
     if (!leaf.empty())
     {
         if ((start > 0) && ((start + len) >= leaf.size())) //remove right half/keep left
@@ -406,6 +465,10 @@ inline T& Rope<T>::operator[](unsigned int index) const
 template <class T>
 unsigned int Rope<T>::calc_length()
 {
+    // calculates weight and length
+    // returns len since insert & remove
+    // don't need weight of subtrees
+    
     wgt = 0;
     len = 0;
 
